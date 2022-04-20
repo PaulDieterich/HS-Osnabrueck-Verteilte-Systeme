@@ -11,6 +11,6 @@
 			compile:`gcc -o udp_server.c udp_server`
 			run: `./udp_server`
 		- UDP_Client in Java
-			make .jar 
-			run: udp_clent \<IP-Adress\> \< chunksize\> \< filename.extencion \>
+			make .jar <br> 
+			run: `javac -jar udp_clent.jar \<IP-Adress\> \< chunksize\> \< filename.txt \> `
 		
