@@ -17,12 +17,8 @@ public class Hsosstp {
         Hsosstp.filename = filename;
         try{
             Hsosstp.file = new RandomAccessFile(filename,"rw");
-            if(file.readBoolean()){ System.out.println("HSOSSTP::initX: file opened"); }
-
         }catch (FileNotFoundException e) {
             System.err.println("FileNotFoundExceptopn Hsosstp::initX()");
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         String init = String.format("HSOSSTP_INITX;%d;%s",chunkSize,filename);
@@ -42,11 +38,11 @@ public class Hsosstp {
         System.out.println("HSOSSTP::getXX:  "+begin);
         return client.writeToServer(begin);
     }
-    static boolean dataX(UdpClient client, long chunkNo, long actualChunkSize, String data){
+    static boolean dataX(UdpClient client, long chunkNo, long actualChunkSize, byte[] data){
         try {
             //setz den file-pointer an die erste stelle oder an die stelle zum weiterlesen anhand der chunkNo.
             Hsosstp.file.seek(chunkNo * Hsosstp.chunkSize);
-            Hsosstp.file.writeBytes(data);
+            Hsosstp.file.write(data);
             if (actualChunkSize == chunkSize) {
                 getXX(client, chunkNo + 1);
                 return true;

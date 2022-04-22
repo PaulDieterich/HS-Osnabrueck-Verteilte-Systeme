@@ -1,6 +1,7 @@
 package de.hsos.pdieteri;
 
 import java.net.StandardSocketOptions;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,35 +35,26 @@ public class Main {
         //Initial writeToServer
         Hsosstp.initX(client, chunkSizeLong, fileName);
 
-
-
-
         //Initial readFromServer
         do{
-            String read = client.readFromServer();
-            String[] arguments = read.split(";");
-            System.out.println("UdpClient::Main::readFromServer:  "+ arguments[0]);
+            byte[] read = client.readFromServer();
+            String str_read = new String(read, 0,read.length,StandardCharsets.UTF_8);
+
+            String[] arguments = str_read.split(";");
             String command = arguments[0];
             if(command != null){
-                if(command.equals("HSOSSTP_INITX")) {
-                    chunkSizeLong = Long.parseLong(arguments[1]);
-                    fileName = arguments[2];
-                    comandCheck = Hsosstp.initX(client, chunkSizeLong, fileName);
-                }
                 if(command.equals("HSOSSTP_SIDXX")) {
                     int ssid = Integer.parseInt(arguments[1]);
                     comandCheck = Hsosstp.sidXX(client, ssid);
                 }
-                if(command.equals("HSOSSTP_GETXX")) {
-                    Long chnunkNr = Long.parseLong(arguments[1]);
-                    comandCheck = Hsosstp.getXX(client, chnunkNr);
-                }
                 if(command.equals("HSOSSTP_DATAX")){
+                    int p = arguments[0].length() + arguments[1].length() + arguments[2].length() + 3;
                     long chunkNo = Long.parseLong(arguments[1]);
                     long actualChunkSize = Long.parseLong(arguments[2]);;
                     String data = arguments[3];
+                    byte[] byte_data = Arrays.copyOfRange(read,p,read.length);
                     // static boolean dataX(UdpClient client, long chunkNo, long actualChunkSize, String data)
-                    comandCheck = Hsosstp.dataX(client, chunkNo, actualChunkSize,data);
+                    comandCheck = Hsosstp.dataX(client, chunkNo, actualChunkSize,byte_data);
                 }
                 if(command.equals("HSOSSTP_ERROR")){
                     System.out.println("HSOSSTP_ERROR");

@@ -149,8 +149,11 @@ void dg_echo (int sockfd) {
                     fread(temp,1,1,fp);
                     char c = temp[0];
                     if (counter == lesezeichen * chunksize){
-                        sprintf(data, "%c",c);
+                        memmove(data+1,data,strlen(data));
+                        data[0] = c;
+                        //sprintf(data, "%c",c);
                     }else{
+
                         sprintf(data, "%s%c",data,c);
                     }
                     counter = counter +1;
