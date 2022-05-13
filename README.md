@@ -14,3 +14,7 @@
 			make .jar <br> 
 			run: `javac -jar udp_clent.jar \<IP-Adress\> \< chunksize\> \< filename.txt \> `
 		
+- Praktikum 4
+	- gRPC server,client
+- Praktikum 5
+	- gRPC server,client with authentication
