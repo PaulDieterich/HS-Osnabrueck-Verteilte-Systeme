@@ -1,0 +1,72 @@
+/*
+ * Definitionen fuer Deliver-Service Publish-Subscribe System.
+ * @hje
+
+ https://developers.google.com/protocol-buffers/docs/cpptutorial
+ */
+
+syntax = "proto3";
+
+package pubsub;
+
+// Leere Nachricht (falls nichts zurueckzugeben ist)
+message EmptyMessage {}
+
+// Nachricht an Service
+message Message {
+    string message = 1;
+}
+
+// Thema des Kanals
+message Topic {
+    string topic = 1;
+    string passcode = 2; /* Geheimnis, damit Topic manipuliert werden kann */
+}
+
+
+// Adresse des Nachrichtenempfängers
+message SubscriberAddress {
+    string ip_address = 1;
+    int32 port = 2;
+}
+
+// Nutzername
+message UserName {
+    string name = 1;
+}
+
+message SessionId {
+    int32 id = 1;
+}
+
+message PubSubParam {
+    oneof param {
+        /* Achtung: Camel-Case Schreibweise wird bei C++ ignoriert */
+        Message optMessage = 1; 
+        Topic optTopic = 2;
+        SubscriberAddress optAddress = 3;
+        EmptyMessage void = 4;
+    }
+    SessionId sid = 5;
+    string hash_string = 6;
+}
+
+// Rueckgaben vom Service
+message ReturnCode {
+    enum Values {
+        OK = 0;
+        CANNOT_REGISTER = 1;
+        CLIENT_ALREADY_REGISTERED = 2;
+        CANNOT_UNREGISTER = 3;
+        CANNOT_SET_TOPIC = 4;
+        NO_HASH_FOR_SESSION = 5;
+        WRONG_HASH_FOR_SESSION = 6;
+        USER_ALREADY_LOGGED_IN = 7;
+        SESSION_INVALID = 8;
+        WRONG_PASSWORD = 9;
+        USER_NOT_EXISTS = 10;
+        UNKNOWN_ERROR = 11;    
+        /* Hier koennen weitere Return-Codes ergaenzt werden */
+    }
+    Values value = 1;
+}

@@ -1,0 +1,32 @@
+/*
+ * Protokoll-Datei fuer den Dispatcher-Service Publish-Subscribe System.
+ * @hje
+ */
+
+syntax = "proto3";
+
+package pubsub;
+ 
+import "pub_sub_common.proto";
+
+// Service Definition
+ service PubSubService {
+   // Registrieren / Deregistrieren per Adresse
+   rpc subscribe (PubSubParam) returns (ReturnCode) {}
+   rpc unsubscribe (PubSubParam) returns (ReturnCode) {}
+   // Thema setzen
+   rpc set_topic (PubSubParam) returns (ReturnCode) {}
+   // Nachrichten publizieren
+   rpc publish (PubSubParam) returns (ReturnCode) {}
+
+   /* Funktionen zur Authentifizierung */
+   // nonce vom Server anfragen 
+   rpc get_session (UserName) returns (SessionId) {} 
+   // Validierung der Session 
+   rpc validate (PubSubParam) returns (ReturnCode) {}    
+   // Invalidierung   
+   rpc invalidate (SessionId) returns (ReturnCode) {} 
+}
+
+
+  
